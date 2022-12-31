@@ -5,6 +5,14 @@ import (
 	"testing"
 )
 
+func TestResolveLeft(t *testing.T) {
+	left := NewLeft[int, error](1)
+
+	ResolveLeftOne(left, func(v int) {
+		assert.Equal(t, 1, v)
+	})
+}
+
 func TestResolveWhenBothAreLeft(t *testing.T) {
 	left1 := NewLeft[int, error](1)
 	left2 := NewLeft[string, error]("1")
@@ -46,6 +54,12 @@ func TestDoNotResolveWhenEitherIsLeft(t *testing.T) {
 func ResolveRight[L any, R any, LL any, RR any](e1 Either[L, R], e2 Either[LL, RR], f func(v1 R, v2 RR)) {
 	if e1.IsRight && e2.IsRight {
 		f(e1.Right.value, e2.Right.value)
+	}
+}
+
+func ResolveLeftOne[L any, R any](e1 Either[L, R], f func(v1 L)) {
+	if e1.IsLeft {
+		f(e1.Left.value)
 	}
 }
 
