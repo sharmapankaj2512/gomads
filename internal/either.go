@@ -17,15 +17,16 @@ type Right[R any] struct {
 }
 
 type Either[L any, R any] struct {
-	Left   Left[L]
-	Right  Right[R]
-	IsLeft bool
+	Left    Left[L]
+	Right   Right[R]
+	IsLeft  bool
+	IsRight bool
 }
 
 func NewLeft[L any, R any](left L) Either[L, R] {
-	return Either[L, R]{Left: Left[L]{value: left}, IsLeft: true}
+	return Either[L, R]{Left: Left[L]{value: left}, IsLeft: true, IsRight: false}
 }
 
 func NewRight[L any, R any](right R) Either[L, R] {
-	return Either[L, R]{Right: Right[R]{value: right}}
+	return Either[L, R]{Right: Right[R]{value: right}, IsLeft: false, IsRight: true}
 }

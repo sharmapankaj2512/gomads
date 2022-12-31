@@ -16,12 +16,37 @@ func TestResolveWhenBothAreLeft(t *testing.T) {
 }
 
 func TestDoNotResolveWhenEitherIsRight(t *testing.T) {
-	left1 := NewLeft[int, error](1)
-	left2 := NewRight[string, string]("1")
+	left := NewLeft[int, error](1)
+	right := NewRight[string, string]("1")
 
-	ResolveLeft(left1, left2, func(v1 int, v2 string) {
+	ResolveLeft(left, right, func(v1 int, v2 string) {
 		assert.Fail(t, "should not be invoked")
 	})
+}
+
+func TestResolveWhenBothAreRight(t *testing.T) {
+	right1 := NewRight[string, int](1)
+	right2 := NewRight[string, string]("1")
+
+	ResolveRight(right1, right2, func(v1 int, v2 string) {
+		assert.Equal(t, 1, v1)
+		assert.Equal(t, "1", v2)
+	})
+}
+
+func TestDoNotResolveWhenEitherIsLeft(t *testing.T) {
+	left := NewLeft[int, error](1)
+	right := NewRight[string, string]("1")
+
+	ResolveRight(left, right, func(v1 error, v2 string) {
+		assert.Fail(t, "should not be invoked")
+	})
+}
+
+func ResolveRight[L any, R any, LL any, RR any](e1 Either[L, R], e2 Either[LL, RR], f func(v1 R, v2 RR)) {
+	if e1.IsRight && e2.IsRight {
+		f(e1.Right.value, e2.Right.value)
+	}
 }
 
 func ResolveLeft[L any, R any, LL any, RR any](e1 Either[L, R], e2 Either[LL, RR], f func(v1 L, v2 LL)) {
