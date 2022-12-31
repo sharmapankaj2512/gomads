@@ -30,3 +30,25 @@ func NewLeft[L any, R any](left L) Either[L, R] {
 func NewRight[L any, R any](right R) Either[L, R] {
 	return Either[L, R]{Right: Right[R]{value: right}, IsLeft: false, IsRight: true}
 }
+
+func Pipe[L any, R any](left Either[L, R], f func(newLeft Either[L, R])) {
+	f(left)
+}
+
+func ResolveLeftOne[L any, R any](e1 Either[L, R], f func(v1 L)) {
+	if e1.IsLeft {
+		f(e1.Left.value)
+	}
+}
+
+func ResolveLeftTwo[L any, R any, LL any, RR any](e1 Either[L, R], e2 Either[LL, RR], f func(v1 L, v2 LL)) {
+	if e1.IsLeft && e2.IsLeft {
+		f(e1.Left.value, e2.Left.value)
+	}
+}
+
+func ResolveRightTwo[L any, R any, LL any, RR any](e1 Either[L, R], e2 Either[LL, RR], f func(v1 R, v2 RR)) {
+	if e1.IsRight && e2.IsRight {
+		f(e1.Right.value, e2.Right.value)
+	}
+}

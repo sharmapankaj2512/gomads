@@ -14,7 +14,3 @@ func TestName(t *testing.T) {
 			})
 		})
 }
-
-func Pipe[L any, R any](left Either[L, R], f func(newLeft Either[L, R])) {
-	f(left)
-}
