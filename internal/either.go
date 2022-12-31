@@ -1,13 +1,5 @@
 package internal
 
-func MapLeft[NL any, L any, R any](e Either[L, R], f func(v L) NL) Either[NL, R] {
-	return NewLeft[NL, R](f(e.Left.value))
-}
-
-func MapRight[NR any, L any, R any](e Either[L, R], f func(v R) NR) Either[L, NR] {
-	return NewRight[L, NR](f(e.Right.value))
-}
-
 type Left[L any] struct {
 	value L
 }
@@ -21,6 +13,14 @@ type Either[L any, R any] struct {
 	Right   Right[R]
 	IsLeft  bool
 	IsRight bool
+}
+
+func MapLeft[NL any, L any, R any](e Either[L, R], f func(v L) NL) Either[NL, R] {
+	return NewLeft[NL, R](f(e.Left.value))
+}
+
+func MapRight[NR any, L any, R any](e Either[L, R], f func(v R) NR) Either[L, NR] {
+	return NewRight[L, NR](f(e.Right.value))
 }
 
 func NewLeft[L any, R any](left L) Either[L, R] {
