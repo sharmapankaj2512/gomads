@@ -35,9 +35,11 @@ func Pipe[L any, R any](left Either[L, R], f func(newLeft Either[L, R])) {
 	f(left)
 }
 
-func ResolveLeftOne[L any, R any](e1 Either[L, R], f func(v1 L)) {
-	if e1.IsLeft {
-		f(e1.Left.value)
+func ResolveLeftOne[L any, R any](f func(v1 L)) func(e1 Either[L, R]) {
+	return func(e1 Either[L, R]) {
+		if e1.IsLeft {
+			f(e1.Left.value)
+		}
 	}
 }
 

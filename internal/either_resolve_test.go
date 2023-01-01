@@ -8,9 +8,9 @@ import (
 func TestResolveLeft(t *testing.T) {
 	left := NewLeft[int, error](1)
 
-	ResolveLeftOne(left, func(v int) {
+	ResolveLeftOne[int, error](func(v int) {
 		assert.Equal(t, 1, v)
-	})
+	})(left)
 }
 
 func TestResolveWhenBothAreLeft(t *testing.T) {

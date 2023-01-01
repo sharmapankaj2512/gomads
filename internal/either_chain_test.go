@@ -5,12 +5,10 @@ import (
 	"testing"
 )
 
-func TestName(t *testing.T) {
+func TestResolveLeftOne(t *testing.T) {
 	left := NewLeft[int, error](1)
-	Pipe(MapLeft(left, func(v int) int { return v + 1 }),
-		func(newLeft Either[int, error]) {
-			ResolveLeftOne(newLeft, func(v int) {
-				assert.Equal(t, 2, v)
-			})
-		})
+	addOne := func(v int) int { return v + 1 }
+	assertIsTwo := func(v1 int) { assert.Equal(t, 2, v1) }
+
+	Pipe(MapLeft(left, addOne), ResolveLeftOne[int, error](assertIsTwo))
 }
