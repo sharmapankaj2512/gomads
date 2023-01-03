@@ -15,6 +15,14 @@ type Try[S any] struct {
 	err     Failure
 }
 
+func (n Try[S]) Value() S {
+	return n.success.value
+}
+
+func (n Try[S]) Error() string {
+	return n.err.value.Error()
+}
+
 func SuccessFor[S any](value S) Try[S] {
 	return Try[S]{success: Success[S]{value: value}}
 }
