@@ -11,8 +11,9 @@ type Failure struct {
 }
 
 type Try[S any] struct {
-	success Success[S]
-	err     Failure
+	success   Success[S]
+	err       Failure
+	isSuccess bool
 }
 
 func (n Try[S]) Value() S {
@@ -23,12 +24,16 @@ func (n Try[S]) Error() string {
 	return n.err.value.Error()
 }
 
+func (n Try[S]) IsSuccess() bool {
+	return n.isSuccess
+}
+
 func SuccessFor[S any](value S) Try[S] {
-	return Try[S]{success: Success[S]{value: value}}
+	return Try[S]{success: Success[S]{value: value}, isSuccess: true}
 }
 
 func ErrorAs[S any](message string) Try[S] {
-	return Try[S]{err: Failure{value: errors.New(message)}}
+	return Try[S]{err: Failure{value: errors.New(message)}, isSuccess: false}
 }
 
 func Map[S any, NS any](try Try[S], f func(v S) NS) Try[NS] {
